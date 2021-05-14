@@ -40,7 +40,7 @@ This validates the cryptographic system.
 ~/dh-aes-p4/mininet$ sudo python mn_code.py dh_aes test 256
 ```
 
-Press `enter` in the `c1-send-aes` terminal; press `enter` in the `c1-send-aes` terminal; and exit from Mininet-WiFi`s terminal:
+Press `enter` in the `c1-send-aes` terminal; press `enter` in the `h1-send-aes` terminal; and exit from Mininet-WiFi`s terminal:
 
 ```
 mininet-wifi> exit
