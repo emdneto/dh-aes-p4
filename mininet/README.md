@@ -27,7 +27,7 @@ On generating the results, the numerical values may have minimal differences com
 
 ### Network topology
 
-The network topology used in the experiments follows a linear arrangement. In this way, host `h1` is connected to switch `s1` and host `h2` is connected to switch `s2`. The `s1` and` s2` switches are also connected to each other. Thus, when s1 receives the packet sent by h1, it forwards the packet to s2 and then the packet is delivered to h2. 
+The network topology used in the experiments follows a linear arrangement. In this way, host `h1` is connected to switch `s1-eth1` and host `h2` is connected to switch `s2-eth1`. The `s1` and `s2` switches are also connected to each other (`s1-eth2 <--> s2-eth2`). Thus, when `s1` receives the packet sent by `h1`, it forwards the packet to `s2` and then the packet is delivered to `h2`. 
 
 ---
 
