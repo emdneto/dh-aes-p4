@@ -1,11 +1,7 @@
 /*
-    This implementation is derived in part from the reference
-    Princeton-Cabernet AES-128 encryption in P4 implementation, which carries 
-    the following notice:
-
-    AES-128 encryption in P4
-
-    Copyright (C) 2019 Xiaoqi Chen, Princeton University
+    Copyright (C) 2021 Ramon Fontes, UFRN/Brazil
+    Copyright (C) 2021 Emídio Neto, UFRN/Brazil
+    Copyright (C) 2021 Fabricio Rodríguez, Unicamp/Brazil
 
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU Affero General Public License as published by

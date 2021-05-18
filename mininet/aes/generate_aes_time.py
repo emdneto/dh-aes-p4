@@ -12,7 +12,7 @@ def rawdump():
     arg = sys.argv
 
     # generate the df log
-    file_ = 'log_encdec_time_{}.csv'.format(arg[1])
+    file_ = '../logs/aes/log_encdec_time_{}.csv'.format(arg[1])
     if glob.glob(file_):
         os.system('rm {}'.format(file_))
 
@@ -32,7 +32,7 @@ def rawdump():
     s21 = []
     s22 = []
     for pcap in pcaps:
-        parsed = rdpcap(pcap)
+        parsed = rdpcap("pcaps/" + pcap)
         for pkt in parsed:
             if pkt.type == 0x9999:
                 if pcap == 's2-eth2.cap':
@@ -42,7 +42,7 @@ def rawdump():
 
     os.system('echo \"\nDecrypt,,\" >> %s' % file_)
     for id, data in enumerate(s21):
-        os.system('echo \"%s,%s,%s\" >> ../../logs/aes/%s' % (id, s21[id], s22[id], file_))
+        os.system('echo \"%s,%s,%s\" >> %s' % (id, s21[id], s22[id], file_))
 
 
 rawdump()

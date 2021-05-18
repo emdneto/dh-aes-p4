@@ -10,7 +10,7 @@
 
 #### Installing python dependencies:
 
-    ~/dh-aes-p4$ pip install scapy matplotlib numpy scipy
+    ~/dh-aes-p4$ pip install scapy matplotlib numpy scipy secrets
 
 #### Generating the LUT and sbox tables:
 
@@ -27,7 +27,7 @@ On generating the results, the numerical values may have minimal differences com
 
 ### Network topology
 
-The network topology used in the experiments follows a linear arrangement. In this way, host `h1` is connected to switch `s1` and host `h2` is connected to switch `s2`. The `s1` and` s2` switches are also connected to each other. Thus, when s1 receives the packet sent by h1, it forwards the packet to s2 and then the packet is delivered to h2. 
+The network topology used in the experiments follows a linear arrangement. In this way, host `h1` is connected to switch `s1-eth1` and host `h2` is connected to switch `s2-eth1`. Both `s1` and `s2` switches are also connected to each other (`s1-eth2 <--> s2-eth2`). Thus, when `s1` receives the packet sent by `h1`, it forwards the packet to `s2` and then the packet is delivered to `h2`. 
 
 ---
 
@@ -40,7 +40,7 @@ This validates the cryptographic system.
 ~/dh-aes-p4/mininet$ sudo python mn_code.py dh_aes test 256
 ```
 
-Press `enter` in the `c1-send-aes` terminal; press `enter` in the `c1-send-aes` terminal; and exit from Mininet-WiFi`s terminal:
+Press `enter` in the `c1:sender` terminal; press `enter` in the `h1:sender` terminal; and exit from Mininet-WiFi`s terminal:
 
 ```
 mininet-wifi> exit
@@ -116,9 +116,9 @@ This tests the Secret-Key Renewall RTT.
 ~/dh-aes-p4/mininet$ sudo python mn_code.py dh_aes dh 256
 ```
 
-Wait to finish inserting the tables entries into the switch. Then,  In the `c1-send-dh` terminal press enter.     
+Wait to finish inserting the tables entries into the switch. Then,  In the `c1:sender` terminal press enter.     
 
-After the `c1-send-dh` terminal closes, run: 
+After the `c1:sender` terminal closes, run: 
 
 ```
 mininet-wifi> exit
@@ -127,7 +127,7 @@ mininet-wifi> exit
 Then run:
 
 ```
-sudo python dh/generate_dh_log.py 256
+sudo python dh/generate_dh_time.py 256
 ```
 
 #### Expected result (~/dh-aes-p4/logs/dh/figs/)
@@ -157,9 +157,9 @@ This tests the no-encrypted scenario.
 ~/dh-aes-p4/mininet$ sudo python mn_code.py no_crypto
 ```
 
-In the `h1-send-nocrypto` terminal press enter.    
+In the `h1:sender` terminal press enter.    
 
-After the `h1-send-nocrypto` terminal closes, run: 
+After the `h1:sender` terminal closes, run: 
 
 ```
 mininet-wifi> exit
@@ -184,9 +184,9 @@ This tests the encryption/decryption time.
 ~/dh-aes-p4/mininet$ sudo python mn_code.py dh_aes aes 256
 ```
 
-Wait to finish inserting the tables entries into the switch. Then, in the `c1-send-aes` and `h1-send-aes` terminals press enter.    
+Wait to finish inserting the tables entries into the switch. Then, in the `c1:sender` and `h1:sender` terminals press enter.    
 
-After the `h1-send-aes` terminal closes, run: 
+After the `h1:sender` terminal closes, run: 
 
 ```
 mininet-wifi> exit
@@ -211,6 +211,8 @@ python aes/generate_aes_time.py 256
 
 ### No controller scenario:
 
+In this scenario, the p4 switch does all the cryptographic part.
+
 
 #### Running the code:
 
@@ -219,9 +221,9 @@ python aes/generate_aes_time.py 256
 ~/dh-aes-p4/mininet$ sudo python mn_code.py no_controller
 ```
 
-Wait to finish inserting the tables entries into the switch. Then, in the `h1-send-aes` terminal press enter.    
+Wait to finish inserting the tables entries into the switch. Then, in the `h1:sender` terminal press enter.    
 
-After the `h1-send-aes` terminal closes, run: 
+After the `h1:sender` terminal closes, run: 
 
 ```
 mininet-wifi> exit
@@ -235,11 +237,49 @@ python no_controller/generate_aes_time.py 256
 
 ---
 
+### Controller scenario:
+
+In this scenario, each packet is encrypted and the controller is triggered to install the private keys.
+
+#### Preparing the environment
+
+    ~/dh-aes-p4$ cd p4src
+	~/dh-aes-p4/p4src$ p4c --target bmv2 --arch v1model controller.p4 -o build
+
+#### Running the code:
+
+```
+~/dh-aes-p4$ cd mininet
+~/dh-aes-p4/mininet$ sudo python mn_code.py controller
+```
+
+Wait to finish inserting the tables entries into the switch. Then, in the `sender` terminal press enter.    
+
+After the `sender` terminal closes, run: 
+
+```
+mininet-wifi> exit
+```
+
+Finally, extract data from the pcap files to generate AES time:
+
+```
+python controller/generate_aes_time.py 256
+```
+
+and for DH RTT:
+
+```
+python controller/generate_dh_time.py 256
+```
+
+---
+
 ### Dropped Packets:
 
 ### Note:
 
-This won't work well with BMv2.
+This does not work with BMv2.
 
 #### Running the code:
 
@@ -248,9 +288,9 @@ This won't work well with BMv2.
 ~/dh-aes-p4/mininet$ sudo python mn_code.py dh_aes miss 256
 ```
 
-Wait to finish inserting the tables entries into the switch. Then, in the `h1-send-miss` and `c1-send-miss` terminals press enter.    
+Wait to finish inserting the tables entries into the switch. Then, in the `h1:sender` and `c1:sender` terminals press enter.    
 
-After the `c1-send-miss` terminal closes, run: 
+After the `c1:sender` terminal closes, run: 
 
 ```
 mininet-wifi> exit
