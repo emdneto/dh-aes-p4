@@ -15,8 +15,12 @@ from mininet.term import makeTerm
 def add_table_entries(s1, s2, cmd1):
     table = '../utils/table.txt'
     info('*** Adding data to tables, please wait until s1 and s2 xterms get closed.\n')
-    makeTerm(s1, title='s1', cmd="bash -c 'echo \"adding table entries...\nplease wait for this terminal to close. \" && {} 50001 < {} >/dev/null 2>&1;'".format(cmd1, table))
-    makeTerm(s2, title='s2', cmd="bash -c 'echo \"adding table entries...\nplease wait for this terminal to close. \" && {} 50002 < {} >/dev/null 2>&1;'".format(cmd1, table))
+    makeTerm(s1, title='s1', cmd="bash -c 'echo \"adding table entries...\n"
+                                 "please wait for this terminal to close. \" &&"
+                                 " {} 50001 < {} >/dev/null 2>&1;'".format(cmd1, table))
+    makeTerm(s2, title='s2', cmd="bash -c 'echo \"adding table entries...\n"
+                                 "please wait for this terminal to close. \" &&"
+                                 " {} 50002 < {} >/dev/null 2>&1;'".format(cmd1, table))
 
 
 def topology():
@@ -38,7 +42,12 @@ def topology():
     c1 = net.addHost('c1', ip='10.0.0.3/8', mac="00:00:00:00:00:03")
 
     arg = sys.argv
-    json_file = '../p4src/build/{}.json'.format(arg[1])
+    file = arg[1]
+    if arg[1] == 'miss' or arg[1] == 'dh' or arg[1] == 'aes' or arg[1] == 'test':
+        file = 'dh-aes'
+    elif arg[1] == 'controller':
+        file = 'controller_' + arg[2]
+    json_file = '../p4src/build/{}.json'.format(file)
 
     info('*** Adding P4 Switch\n')
     s1 = net.addSwitch('s1', cls=P4Switch, netcfg=True, loglevel='info',
@@ -63,8 +72,7 @@ def topology():
     net.start()
     net.staticArp()
 
-    if arg[1] != 'no_crypto' and arg[1] != 'no_controller' and arg[1] != 'controller' \
-            and arg[2] == 'test':
+    if arg[1] == 'test':
         key0 = '0x4df2971c482e031fb3bd72fef68ff4905eb26bcd6f3eee3dca6d12131b251976'
         key1 = '0x80b9058aa1c3297837416c43409340e61e16dbc7799c5e2ed35ed55b92da4692'
     else:
@@ -73,11 +81,11 @@ def topology():
 
     bits = '0x0'
     if arg[1] != 'no_crypto' and arg[1] != 'no_controller' and arg[1] != 'controller':
-        if arg[3] == '128':
+        if arg[2] == '128':
             bits = '0x0'
-        elif arg[3] == '192':
+        elif arg[2] == '192':
             bits = '0x1'
-        elif arg[3] == '256':
+        elif arg[2] == '256':
             bits = '0x2'
 
     cmd1 = 'simple_switch_CLI --thrift-port'
@@ -140,20 +148,17 @@ def topology():
     elif arg[1] == 'controller':
         makeTerm(h1, title='sender', cmd="bash -c 'python controller/sender.py;'")
         makeTerm(c1, title='sniffer', cmd="bash -c 'python controller/sniffer.py;'")
-    else:
-        if arg[2] == 'miss':
-            makeTerm(h1, title='sender', cmd="bash -c 'python miss/sender_data_miss.py;'")
-            makeTerm(c1, title='sender', cmd="bash -c 'python miss/sender_control_miss.py;'")
-        elif arg[2] == 'dh':
-            makeTerm(c1, title='sender', cmd="bash -c 'python dh/sender_control_dh.py;'")
-        elif arg[2] == 'aes':
-            makeTerm(c1, title='sender', cmd="bash -c 'python aes/sender_control_aes.py;'")
-            makeTerm(h1, title='sender', cmd="bash -c 'python aes/sender_data_aes.py;'")
-        elif arg[2] == 'no-controller':
-            makeTerm(h1, title='sender', cmd="bash -c 'python test/sender_data_aes.py;'")
-        elif arg[2] == 'test':
-            makeTerm(c1, title='sender', cmd="bash -c 'python test/sender_control_aes.py;'")
-            makeTerm(h1, title='sender', cmd="bash -c 'python test/sender_data_aes.py;'")
+    elif arg[1] == 'miss':
+        makeTerm(h1, title='sender', cmd="bash -c 'python miss/sender_data_miss.py;'")
+        makeTerm(c1, title='sender', cmd="bash -c 'python miss/sender_control_miss.py;'")
+    elif arg[1] == 'dh':
+        makeTerm(c1, title='sender', cmd="bash -c 'python dh/sender_control_dh.py;'")
+    elif arg[1] == 'aes':
+        makeTerm(c1, title='sender', cmd="bash -c 'python aes/sender_control_aes.py;'")
+        makeTerm(h1, title='sender', cmd="bash -c 'python aes/sender_data_aes.py;'")
+    elif arg[1] == 'test':
+        makeTerm(c1, title='sender', cmd="bash -c 'python test/sender_control_aes.py;'")
+        makeTerm(h1, title='sender', cmd="bash -c 'python test/sender_data_aes.py;'")
 
     if arg[1] == 'controller':
         b1.cmd('ovs-ofctl add-flow b1 in_port=1,actions=3')

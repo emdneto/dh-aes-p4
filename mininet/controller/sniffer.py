@@ -15,5 +15,4 @@ def get_key():
     return secrets.token_hex(16)
 
 
-sniff(iface="c1-eth0", filter='ether proto 0x812 or ether proto 0x813',
-      prn=pkt_callback, store=0)
+sniff(iface="c1-eth0", filter='ether proto 0x812 or ether proto 0x813', prn=pkt_callback, store=0)

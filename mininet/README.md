@@ -37,7 +37,7 @@ This validates the cryptographic system.
 
 ```
 ~/dh-aes-p4$ cd mininet
-~/dh-aes-p4/mininet$ sudo python mn_code.py dh_aes test 256
+~/dh-aes-p4/mininet$ sudo python mn_code.py test 256
 ```
 
 Press `enter` in the `c1:sender` terminal; press `enter` in the `h1:sender` terminal; and exit from Mininet-WiFi`s terminal:
@@ -113,7 +113,7 @@ This tests the Secret-Key Renewall RTT.
 
 ```
 ~/dh-aes-p4$ cd mininet
-~/dh-aes-p4/mininet$ sudo python mn_code.py dh_aes dh 256
+~/dh-aes-p4/mininet$ sudo python mn_code.py dh 256
 ```
 
 Wait to finish inserting the tables entries into the switch. Then,  In the `c1:sender` terminal press enter.     
@@ -181,7 +181,7 @@ This tests the encryption/decryption time.
 
 ```
 ~/dh-aes-p4$ cd mininet
-~/dh-aes-p4/mininet$ sudo python mn_code.py dh_aes aes 256
+~/dh-aes-p4/mininet$ sudo python mn_code.py aes 256
 ```
 
 Wait to finish inserting the tables entries into the switch. Then, in the `c1:sender` and `h1:sender` terminals press enter.    
@@ -244,13 +244,15 @@ In this scenario, each packet is encrypted and the controller is triggered to in
 #### Preparing the environment
 
     ~/dh-aes-p4$ cd p4src
-	~/dh-aes-p4/p4src$ p4c --target bmv2 --arch v1model controller.p4 -o build
+	~/dh-aes-p4/p4src$ p4c --target bmv2 --arch v1model controller_128.p4 -o build
+	~/dh-aes-p4/p4src$ p4c --target bmv2 --arch v1model controller_192.p4 -o build
+	~/dh-aes-p4/p4src$ p4c --target bmv2 --arch v1model controller_256.p4 -o build
 
 #### Running the code:
 
 ```
 ~/dh-aes-p4$ cd mininet
-~/dh-aes-p4/mininet$ sudo python mn_code.py controller
+~/dh-aes-p4/mininet$ sudo python mn_code.py controller 128
 ```
 
 Wait to finish inserting the tables entries into the switch. Then, in the `sender` terminal press enter.    
@@ -285,7 +287,7 @@ This does not work with BMv2.
 
 ```
 ~/dh-aes-p4$ cd mininet
-~/dh-aes-p4/mininet$ sudo python mn_code.py dh_aes miss 256
+~/dh-aes-p4/mininet$ sudo python mn_code.py miss 256
 ```
 
 Wait to finish inserting the tables entries into the switch. Then, in the `h1:sender` and `c1:sender` terminals press enter.    
