@@ -5,7 +5,7 @@ A P4 implementation towards Diffie-Hellman key exchange with AES encryption.
 
 # Demo
 
-[![Watch the video](https://i9.ytimg.com/vi/vKngddt_brA/mq2.jpg?sqp=CPz2joUG&rs=AOn4CLBpmzFAeAD-90twM8w6Gs1Bvnxa-w)](https://www.youtube.com/watch?v=vKngddt_brA)
+[![Watch the video](https://github.com/emdneto/dh-aes-p4/blob/main/utils/demo.png)](https://www.youtube.com/watch?v=vKngddt_brA)
 
 # Features
 
