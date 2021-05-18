@@ -10,7 +10,7 @@
 
 #### Installing python dependencies:
 
-    ~/dh-aes-p4$ pip install scapy matplotlib numpy scipy
+    ~/dh-aes-p4$ pip install scapy matplotlib numpy scipy secrets
 
 #### Generating the LUT and sbox tables:
 
@@ -231,6 +231,36 @@ Finally, extract data from the pcap files:
 
 ```
 python no_controller/generate_aes_time.py 256
+```
+
+---
+
+### Controller scenario:
+
+#### Preparing the environment
+
+    ~/dh-aes-p4$ cd p4src
+	~/dh-aes-p4/p4src$ p4c --target bmv2 --arch v1model controller.p4 -o build
+
+#### Running the code:
+
+```
+~/dh-aes-p4$ cd mininet
+~/dh-aes-p4/mininet$ sudo python mn_code.py controller
+```
+
+Wait to finish inserting the tables entries into the switch. Then, in the `sender` terminal press enter.    
+
+After the `sender` terminal closes, run: 
+
+```
+mininet-wifi> exit
+```
+
+Finally, extract data from the pcap files:
+
+```
+python controller/generate_aes_time.py 256
 ```
 
 ---
