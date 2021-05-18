@@ -127,7 +127,7 @@ mininet-wifi> exit
 Then run:
 
 ```
-sudo python dh/generate_dh_log.py 256
+sudo python dh/generate_dh_time.py 256
 ```
 
 #### Expected result (~/dh-aes-p4/logs/dh/figs/)
@@ -257,10 +257,16 @@ After the `sender` terminal closes, run:
 mininet-wifi> exit
 ```
 
-Finally, extract data from the pcap files:
+Finally, extract data from the pcap files to generate AES time:
 
 ```
 python controller/generate_aes_time.py 256
+```
+
+and for DH RTT:
+
+```
+python controller/generate_dh_time.py 256
 ```
 
 ---
