@@ -5,7 +5,8 @@ A P4 implementation towards Diffie-Hellman key exchange with AES encryption.
 
 # Demo
 
-[![Watch the video](https://img.youtube.com/vi/T-D1KVIuvjA/xx.jpg)](https://youtu.be/)
+[!<img src="imgs/demo.png" width="700" height="400">](https://www.youtube.com/watch?v=vKngddt_brA)
+
 
 # Features
 

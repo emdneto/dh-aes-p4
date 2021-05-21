@@ -6,6 +6,9 @@
     AES-128 encryption in P4
 
     Copyright (C) 2019 Xiaoqi Chen, Princeton University
+    Copyright (C) 2021 Ramon Fontes, UFRN/Brazil
+    Copyright (C) 2021 Emídio Neto, UFRN/Brazil
+    Copyright (C) 2021 Fabricio Rodríguez, Unicamp/Brazil
 
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU Affero General Public License as published by
@@ -801,12 +804,12 @@ GENERATE_ALL_UNTABLE_LUT_EXPAND(12)
         //hdr.ipv4.ttl = hdr.ipv4.ttl - 1;
     }
 
-    action dh_l2_fwd() {
+    action proceed_dh() {
         hdr.aes_inout.setInvalid();
         hdr.dh_probe[0].setValid();
     }
 
-    action aes_l2_fwd() {
+    action proceed_data() {
         hdr.aes_inout.setValid();
         hdr.dh_probe[0].setInvalid();
     }
@@ -1208,7 +1211,7 @@ TABLE_LUT(aes_sbox_lut_33_rLAST, meta.aes.r2[7 : 0], merge_to_t3_slice3)
                         }
                     }
                     write_pubKey();
-                    dh_l2_fwd();
+                    proceed_dh();
                 }
                 else{
                     if (hdr.ethernet.srcAddr == 0x999999999999 && hdr.dh_probe[0].flag == 0x00){
@@ -1241,7 +1244,7 @@ TABLE_LUT(aes_sbox_lut_33_rLAST, meta.aes.r2[7 : 0], merge_to_t3_slice3)
                         reflect();
 
                         write_pubKey();
-                        dh_l2_fwd();
+                        proceed_dh();
                     }
                     else if (hdr.ethernet.srcAddr == 0x999999999999 && hdr.dh_probe[0].flag == 0x01){
                         compute_secret_dh_ph1();
@@ -1488,7 +1491,7 @@ TABLE_LUT(aes_sbox_lut_33_rLAST, meta.aes.r2[7 : 0], merge_to_t3_slice3)
                     if (keysize == 0x2){mask_key(meta.aes.expandkey_r14);}
                     
                     write_payload();
-                    aes_l2_fwd();
+                    proceed_data();
                 }
                 else if (flag == 0x0){
                     read_payload();
@@ -1520,7 +1523,7 @@ TABLE_LUT(aes_sbox_lut_33_rLAST, meta.aes.r2[7 : 0], merge_to_t3_slice3)
                     new_round(); APPLY_ALL_UNTABLE_LUT(LAST); mask_key(secretKey128);
                     // End AES
                     write_payload();
-                    aes_l2_fwd();
+                    proceed_data();
                 } 
                 else {
                     _drop();
