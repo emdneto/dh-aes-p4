@@ -3,6 +3,8 @@
 
 A P4 implementation towards Diffie-Hellman key exchange with AES encryption.
 
+For the most up-to-date version, please go to https://github.com/reginalab/dh-aes-p4
+
 # Demo
 
 [![Watch the video](https://github.com/emdneto/dh-aes-p4/blob/main/utils/demo.png)](https://www.youtube.com/watch?v=vKngddt_brA)
